@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Player {
-
     private final int spriteWidth = 64;
     private final int spriteHeight = 64;
 
@@ -29,6 +28,8 @@ public class Player {
 
     private String currentSpritesheet;
 
+    private ImageView worldImageView;
+
 
     private int xPosition = 0;
     private int yPosition = 0;
@@ -40,7 +41,9 @@ public class Player {
     private ImageView spriteView;
     private final Set<KeyCode> keysPressed = new HashSet<>();
 
-    public Player(Pane gamePane) {
+    public Player(Pane gamePane, ImageView worldImageView) {
+        this.worldImageView = worldImageView;
+
         setupPlayer();
         gamePane.getChildren().add(spriteView);
 
@@ -53,6 +56,11 @@ public class Player {
                 move();
             }
         }.start();
+    }
+
+    public ImageView get()
+    {
+        return this.spriteView;
     }
 
     private void setupPlayer() {
@@ -137,9 +145,19 @@ public class Player {
         if (wasMoving != isMoving || previousOrientation != lastOrientation) {
             updateSpriteSheet();
         }
+        /*spriteView.setX(spriteView.getX() + dx);
+        spriteView.setY(spriteView.getY() + dy);*/
+        // Calculer la nouvelle position du joueur (centre de l'écran)
+        double newX = 540 - spriteView.getLayoutBounds().getWidth() / 2;
+        double newY = 360 - spriteView.getLayoutBounds().getHeight() / 2;
 
-        spriteView.setX(spriteView.getX() + dx);
-        spriteView.setY(spriteView.getY() + dy);
+        // Déplacer l'arrière-plan dans la direction opposée
+        worldImageView.setX(worldImageView.getX() - dx);
+        worldImageView.setY(worldImageView.getY() - dy);
+
+        // Garder le joueur au centre
+        spriteView.setX(newX);
+        spriteView.setY(newY);
     }
 
     private void updateSpriteSheet() {
@@ -193,8 +211,6 @@ public class Player {
             spriteView.setScaleX(1);
         }
     }
-
-
     public ImageView getSpriteView() {
         return spriteView;
     }

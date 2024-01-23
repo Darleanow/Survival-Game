@@ -162,31 +162,46 @@
 //        // player.collectResource(food);
 //        // player.toString();
 
+import World.World;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import Player.*;
+import World.*;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
         Pane gamePane = new Pane();
-        Player player = new Player(gamePane);
+        World world = new World("file:Ressources/World/GrassNDirt.png",
+                1024, 1024, 100);
+        Image worldImage = world.generateWorld();
 
-        Scene scene = new Scene(gamePane, 300, 300);
-        primaryStage.setTitle("Déplacement fluide du Joueur");
-        scene.setFill(Color.DARKGRAY);
+        ImageView worldImageView = new ImageView(worldImage);
+        gamePane.getChildren().add(worldImageView);
+
+        Scene scene = new Scene(gamePane, 1080, 720);
+
+
+        Player player = new Player(gamePane, worldImageView);
+
+        //scene.setFill(Color.DARKGRAY);
+
+        primaryStage.setTitle("Alcia");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        gamePane.requestFocus(); // Important pour capturer les événements clavier
+        //gamePane.setFocusTraversable(true);
+        gamePane.requestFocus(); // Important for capturing keyboard events
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
+
